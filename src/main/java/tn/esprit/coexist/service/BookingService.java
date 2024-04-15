@@ -11,5 +11,5 @@ public interface BookingService {
   public Booking addBooking(Booking booking, Integer carpoolingID);
   public void deleteBooking(Integer bookingId);
   public List<Booking> getALLBooking();
-  public void sendDelateCarpoolingEmail();
+
 }

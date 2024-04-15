@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin("*")
 public class BookingController {
     BookingService bookingService;
     @PostMapping("/addBooking/{carpoolingID}")
@@ -23,7 +22,7 @@ public class BookingController {
         bookingService.deleteBooking(bookingId);
 
     }
-    @GetMapping("getALLBooking")
+    @GetMapping("/getALLBooking")
     public List<Booking> getALLBooking(){
        return bookingService.getALLBooking();
     }

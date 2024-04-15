@@ -1,9 +1,6 @@
 package tn.esprit.coexist.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +12,6 @@ import java.util.Timer;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "carpoolingID")
 
 public class Carpooling {
     @Id
@@ -43,6 +39,6 @@ public class Carpooling {
     @ManyToOne
     private User user;
     @OneToMany(mappedBy ="carpooling",cascade = CascadeType.ALL)
-@JsonIgnore
+
     private List<Booking>bookings;
 }
