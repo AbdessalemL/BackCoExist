@@ -10,9 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import tn.esprit.coexist.config.exception.UserBlockedException;
 import tn.esprit.coexist.dto.AuthenticationRequest;
 import tn.esprit.coexist.dto.AuthenticationResponse;
 import tn.esprit.coexist.dto.RegisterRequest;
@@ -21,6 +24,9 @@ import tn.esprit.coexist.entity.User;
 import tn.esprit.coexist.repository.UserRepository;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -37,6 +43,13 @@ public class AuthenticationService {
     public static final String uploadDirectory = "C:/xampp/htdocs/images/";
 
     public AuthenticationResponse register(RegisterRequest request) throws IOException {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            System.out.println("Email already exists " );
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
+        }
+        if (request.getUsername().equals(request.getPassword())) {
+            throw new IllegalArgumentException("Le mot de passe doit être différent du nom d'utilisateur");
+        }
         var  user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -46,32 +59,30 @@ public class AuthenticationService {
                 .roleName(request.getRoleName())
                 // .imageUrl(request.getImageUrl(userService.Addimage(User, imageFile)))
                 .build();
-        String url = "http://localhost:4200/#/verification" ;
-        String newLine = "<br/>"; // HTML line break
-        String htmlMessage = "<div style='border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;'>"
-                + "Soyez le bienvenue dans notre plateforme" + newLine
-                + "Veuillez utiliser ce lien pour vous authentifier : " + newLine
-                + "<a href='" + url + "'>" + url + "</a>" + newLine
+        /*Path directoryPath = Paths.get(uploadDirectory);
+        if (!Files.exists(directoryPath)) {
+            Files.createDirectories(directoryPath);
+        }
+        String originalFilename = imageFile.getOriginalFilename();
+        String fileName = UUID.randomUUID().toString() + "_" + originalFilename;
 
-                + "</div>";
-        userRepository.save(user);
-        /*String Newligne = System.getProperty("line.separator");
-        String url = "http://localhost:4200/auth/verification/" + suser.getToken();
-        String body = "Soyez le bienvenue dans notre platforme COEXIST  \n  veuillez utuliser ce lien là pour s'authentifier :" + Newligne + url + Newligne + "verification" +
-                "Voici votre code de verfication  TN1122" ;
-        try {
-            emailSenderService.send(user.getEmail(), "Welcome", body);
-            return new ResponseEntity<>(request HttpStatus.OK);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            //return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        Path filePath = Paths.get(uploadDirectory, fileName);
+
+        Files.write(filePath, imageFile.getBytes());
+
+        user.setProfilePicturePath(fileName);
+         */
+        /*if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
+            String relativeImagePath = fileUploadService.uploadImage(request.getProfileImage(), "user");
+            user.setProfilePicturePath(relativeImagePath);
+        } else {
+            user.setProfilePicturePath("uploads/avatar/default_user_avatar.png");
         }
          */
-        try {
-            emailSenderService.send(user.getEmail(), "Welcome " + user.getUsername(), htmlMessage);
-        } catch (Exception e) {
-            System.out.println("Failed to send welcome email to " + user.getEmail() + ": " + e.getMessage());
-        }
+
+        userRepository.save(user);
+
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         System.out.println("welcome : " + user.getUsername());
@@ -91,10 +102,20 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var userOptional = userRepository.findByEmail(request.getEmail());
+        if (userOptional.isEmpty()) {
+            // Gérer le cas où l'utilisateur n'existe pas
+            throw new UsernameNotFoundException("User not found");
+        }
+        var user = userOptional.get();
+        // Vérifier si l'utilisateur est bloqué
+        if (user.isBlocked()) {
+            throw new UserBlockedException("User is blocked");
+        }
+        var user1 = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        var jwtToken = jwtService.generateToken(user1);
+        var refreshToken = jwtService.generateRefreshToken(user1);
         System.out.println("Role of logged user : " + user.getRoleName());
         System.out.println("token of logged user : " + jwtToken);
         return AuthenticationResponse.builder()

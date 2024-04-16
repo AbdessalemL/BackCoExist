@@ -27,7 +27,7 @@ public class User implements UserDetails {
     private  String email;
     private  Long phoneNumber;
     private  String Address;
-    private  String imageUrl;
+    private String profilePicturePath;
     private boolean valid;
     private boolean blocked;
     private String token;

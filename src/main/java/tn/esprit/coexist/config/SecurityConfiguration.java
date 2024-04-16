@@ -39,7 +39,6 @@ public class SecurityConfiguration {
                         req.requestMatchers("/**")
                             .permitAll()
                                 .requestMatchers(ADMINURL).hasAnyRole("ADMIN")
-
                                 .requestMatchers("/**")
                         .authenticated()
                 )

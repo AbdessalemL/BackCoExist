@@ -16,6 +16,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
-    @Query(nativeQuery = true, value = "SELECT * FROM User u WHERE (:keyword IS NULL OR u.username LIKE %:keyword%)")
+    @Query(nativeQuery = true, value = "SELECT * FROM User u WHERE (:keyword IS NULL OR u.username  LIKE %:keyword%)")
     public List<User> recherche(@Param("keyword") String keyword);
 }

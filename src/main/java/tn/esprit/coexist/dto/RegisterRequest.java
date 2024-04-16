@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class RegisterRequest implements Serializable {
 
     private String username;
     private String email;
@@ -23,7 +23,7 @@ public class RegisterRequest {
     private Long phoneNumber;
     private String address;
     private RoleName roleName;
-    private String imageUrl;
+    private MultipartFile profileImage;
 
 
 }

@@ -189,7 +189,7 @@ public class UserServiceImp implements UserService {
 
             Files.write(filePath, imageFile.getBytes());
 
-            user.setImageUrl(fileName);
+            user.setProfilePicturePath(fileName);
 
             return userRepository.save(user);
         } catch (IOException e) {

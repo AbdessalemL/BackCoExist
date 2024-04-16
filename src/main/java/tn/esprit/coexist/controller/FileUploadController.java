@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 public class FileUploadController {
 
     private final FileUploadService fileUploadService;
-    @Value("src/main/resources/upload")
+    @Value("${profile.images.upload.directory}")
     private String profileImagesUploadDirectory;
 
     @PostMapping("/upload-profile-picture")
