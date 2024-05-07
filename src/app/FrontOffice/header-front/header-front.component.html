@@ -2,7 +2,7 @@
   <!--Collapse button-->
   <div class="container">
     <a href="#" data-activates="mobile-menu" class="button-collapse right"><i class="fa fa-bars black-text"></i></a>
-    <div class="navbar-desktop">
+    <div class="navbar-desktop" *ngIf="!isconn ; else inconn">
       <ul class="nav navbar-nav pull-right hidden-md-down text-uppercase">
         <li style="float:right;">
           <img src="/assets/frontOffice/img/coexist1-removebg-preview.png" alt="Your Logo" height="50" width="150" translate="yes"/>
@@ -75,6 +75,22 @@
         </button>
       </ul>
     </div>
+
+    <ng-template #inconn>
+      <div class="navbar-collapse collapse" id="navbar_global"  >
+
+        <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
+          <li class="nav-item dropdown">
+            <a class="nav-link no-caret" data-toggle="dropdown" role="button">
+              <i class="fa fa-plug" aria-hidden="true"></i>
+              <span class="nav-link-inner--text text-black" [routerLink]="['/user/logout']">logout </span>
+            </a>
+          </li>
+        </ul>
+
+
+      </div>
+    </ng-template>
   </div>
 </nav>
 <!--/.Navbar-->
