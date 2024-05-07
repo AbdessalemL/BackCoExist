@@ -21,7 +21,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let user of users let i = index">
+    <tr *ngFor="let user of users | paginate: { itemsPerPage: 3, currentPage: p }">
       <td>{{user.username}}</td>
       <td>{{user.email}}</td>
       <td>{{user.phoneNumber}}</td>
@@ -39,11 +39,8 @@
 
 
 
-  <div class="pagination-container">
-    <button mat-button [disabled]="currentPage === 1" (click)="onPrevPage()" class="button-icon">Previous</button>
-    <span>{{ currentPage }} / {{ totalPages() }}</span>
-    <button mat-button [disabled]="currentPage === totalPages()" (click)="onNextPage()" class="button-icon">Next</button>
-  </div>
+  <pagination-controls class="custom-pagination" (pageChange)="p = $event"></pagination-controls>
+
 </div>
 
 

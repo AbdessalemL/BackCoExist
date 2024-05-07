@@ -19,6 +19,8 @@ export class AllUsersComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 3; // Number of events per page
   pagedProducts: UserModel[] = [];
+  itemsPerPage = 3; // Set your desired items per page
+  p:number;
   constructor( private authservice: AuthService, private router: Router,private userservice: UserService) { }
 
   ngOnInit() {

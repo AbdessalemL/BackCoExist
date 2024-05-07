@@ -72,6 +72,7 @@ const routes: Routes = [
   {
     path: "user", component: AllTemplateFrontComponent,
     children: [
+      { path: 'addP', component: AddProductComponent },
       { path: "home", component: HomeFrontComponent },
       { path: "authenticate", component: LoginComponent },
       { path: "register", component: RegisterComponent },

@@ -2,12 +2,13 @@
 <br>
 <div class="search-container">
   <!-- Search input field -->
-  <input type="text" placeholder="Search events..." [(ngModel)]="keyword" class="search-input" (input)="search()">
+  <input type="text" placeholder="Search products..." [(ngModel)]="keyword" class="search-input" (input)="search()">
   <mat-icon>search</mat-icon>
 </div>
 
 <div class="event-container">
   <div class="row">
+
     <ng-container *ngIf="pagedProducts.length > 0; else noEventsFound">
       <div class="col-md-4" *ngFor="let product of pagedProducts let i = index">
         <div class="card mb-3">
